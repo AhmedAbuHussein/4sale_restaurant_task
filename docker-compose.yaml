@@ -1,0 +1,38 @@
+version: '3.8'
+services: 
+    main:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - .:/var/www
+        ports:
+            - 8000:8000
+        env_file: ./.env
+        environment:
+            - APP_NAME=Task
+            - APP_ENV=local
+            - APP_KEY=base64:7fMa/R7tC8SD+IvEo+BtwZ6m9efKC708t6ac8Q5RUJk=
+            - DB_CONNECTION=mysql
+            - APP_URL=http://localhost:8000
+            - DB_HOST=db
+            - DB_PORT=3306
+            - DB_DATABASE=task
+            - DB_USERNAME=root
+            - DB_PASSWORD=root
+        depends_on:
+            - db
+        command: sh -c "php artisan migrate --seed && php artisan serv --host=0.0.0.0 --port=8000"
+    db:
+        image: mariadb
+        ports:
+            - 3306:3306
+        volumes:
+            - db_data:/var/lib/mysql
+        environment:
+            - MYSQL_DATABASE=task
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_PASSWORD=root
+        restart: unless-stopped
+volumes:
+  db_data:
