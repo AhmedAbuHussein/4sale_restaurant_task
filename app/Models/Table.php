@@ -25,4 +25,19 @@ class Table extends Model
     {
         return $this->where('id', $value)->firstOrFail();
     }
+
+
+    ############### Scope ###########
+    public function ScopeCheckAvailable($builder, $data)
+    {
+        $builder->when(array_key_exists('persons', $data), function($query) use ($data){
+            $query->where('capacity', ">=", $data['persons']);
+        })
+        ->when(array_key_exists('table_id', $data), function($query) use ($data){
+            $query->where('id', $data['table_id']);
+        })
+        ->whereDoesntHave('reservations', function($query) use ($data){
+            $query->select('id')->check($data);
+        });
+    }
 }

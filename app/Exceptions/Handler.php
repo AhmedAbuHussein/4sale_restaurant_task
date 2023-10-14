@@ -2,10 +2,18 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -71,40 +79,39 @@ class Handler extends ExceptionHandler
 
     private function customApiResponse($exception)
     {
-        if (method_exists($exception, 'getStatusCode')) {
-            $statusCode = $exception->getStatusCode();
-        } else {
-            $statusCode = 500;
-        }
-
         $response = [];
-
-        switch ($statusCode) {
-            case 401:
-                $response['message'] = 'Unauthorized';
-                break;
-            case 403:
-                $response['message'] = 'Forbidden';
-                break;
-            case 404:
-                $response['message'] = 'Not Found';
-                break;
-            case 405:
-                $response['message'] = 'Method Not Allowed';
-                break;
-            case 422:
-                $response['message'] = $exception->original['message'];
-                $response['errors'] = $exception->original['errors'];
-                break;
-            default:
-                $response['message'] = ($statusCode == 500) ? 'Whoops, looks like something went wrong' : $exception->getMessage();
-                break;
+        $statusCode = 500;
+        if (method_exists($exception, 'getCode') || method_exists($exception, 'getStatusCode')) {
+            $statusCode =  ($exception->getCode() > 0 && $exception->getCode() < 500) ? $exception->getCode() :  $exception->getStatusCode();
         }
 
-        // if (config('app.debug')) {
-        //     $response['trace'] = $exception->getTrace();
-        //     $response['code'] = $exception->getCode();
-        // }
+        if ($exception instanceof ModelNotFoundException) {
+            $modelName = " " . strtolower(class_basename($exception->getModel())) . " ";
+            $response['message'] = "Does not exist Any ". $modelName . " with this Identifier ";
+        }
+        elseif ($exception instanceof AuthorizationException) {
+            $response['message'] = $exception->getMessage();
+        }
+        elseif ($exception instanceof NotFoundHttpException) {
+            $response['message'] = 'Model Not Found Http Excption';
+        }
+        elseif ($exception instanceof MethodNotAllowedHttpException) {
+            $response['message'] = 'Method Not Allowed';
+        }
+        elseif ($exception instanceof HttpException) {
+            $response['message'] = 'Http Exception Error';
+        }
+        elseif ($exception instanceof QueryException) {
+            $response['message'] = $exception->getMessage();
+        }
+        elseif ($exception instanceof TokenMismatchException) {
+           $response['message'] =  'Csrf token mis match';
+        }
+        elseif ($exception instanceof UnprocessableEntityHttpException) {
+            $response['message'] =  $exception->getMessage();
+        }else{
+            $response['message'] = $exception->getMessage();
+        }
 
         $response['status'] = $statusCode;
 

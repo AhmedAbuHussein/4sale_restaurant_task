@@ -16,13 +16,25 @@ class TableReservationController extends Controller
     }
 
     /**
-     * Display the specified table.
      *
      * @param  \App\Models\Table  $table
      * @return \Illuminate\Http\Response
      */
-    public function check_available(TableReservationRequest $request)
+    public function index(TableReservationRequest $request)
     {
-        return $this->repository->handler($request);
+        $data = $request->validated();
+        return $this->repository->handler($data);
+    }
+
+    /**
+     *
+     * @param  \App\Models\Table  $table
+     * @return \Illuminate\Http\Response
+     */
+    public function show(TableReservationRequest $request, $table)
+    {
+        $data = $request->validated();
+        $data['table_id'] = $table;
+        return $this->repository->handler($data);
     }
 }

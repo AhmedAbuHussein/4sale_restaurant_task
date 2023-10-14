@@ -23,19 +23,26 @@ class Reservation extends Model
     }
 
     ############## Scope ###########
-    public function scopeCheck(Builder $builder,Request $request)
+    public function scopeCheck(Builder $builder, $data)
     {
-        return $builder->where('reservation_date', $request->reservation_date)
-            ->where(function($query) use ($request){
-                $query->where(function($qr) use ($request){
-                    // check for start time between exist time
-                    $qr->whereTime('from_time', ">=", $request->from_time)
-                        ->whereTime('from_time', "<=", $request->to_time);
-                })
-                ->orWhere(function($qr) use ($request){
-                    // check for end time between exist time
-                    $qr->whereTime('to_time', ">=", $request->from_time)
-                        ->whereTime('to_time', "<=", $request->to_time);
+        $check = array_key_exists('from_time', $data) && array_key_exists('to_time', $data);
+        return $builder
+            ->when(array_key_exists('reservation_date', $data), function($query) use ($data){
+                $query->where('reservation_date', $data['reservation_date']);
+            })
+            ->when($check, function($query) use ($data){
+                $query->where(function($query) use ($data){
+                    # inner `where` to prevent overwrite any where else
+                    $query->where(function($qr) use ($data){
+                        // check for start time between exist time
+                        $qr->whereTime('from_time', ">=", $data['from_time'])
+                            ->whereTime('from_time', "<=", $data['to_time']);
+                    })
+                    ->orWhere(function($qr) use ($data){
+                        // check for end time between exist time
+                        $qr->whereTime('to_time', ">=", $data['from_time'])
+                            ->whereTime('to_time', "<=", $data['to_time']);
+                    });
                 });
             });
     }

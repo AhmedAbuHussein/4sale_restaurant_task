@@ -3,21 +3,19 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\V1\TableReservationResource;
-use App\Http\Resources\Api\V1\TableResource;
-use App\Repositories\TableRepository;
+use App\Repositories\MenuRepository;
 use Illuminate\Http\Request;
 
-class TableController extends Controller
+class MenuController extends Controller
 {
     private $repository;
     
-    public function __construct(TableRepository $repository)
+    public function __construct(MenuRepository $repository)
     {
         $this->repository = $repository;
     }
     /**
-     * Display a listing of the tables.
+     * Display a listing of the meal.
      * @return \Illuminate\Http\Response
     */
     public function index(Request $request)
@@ -26,13 +24,13 @@ class TableController extends Controller
     }
 
     /**
-     * Display the specified table.
+     * Display the specified id.
      *
-     * @param  \App\Models\Table  $table
+     * @param  \App\Models\Meal  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($table)
+    public function show($id)
     {
-        return $this->repository->findOrFail($table);
+        return $this->repository->findOrFail($id);
     }
 }
