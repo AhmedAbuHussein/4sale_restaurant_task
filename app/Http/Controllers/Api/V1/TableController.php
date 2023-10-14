@@ -2,72 +2,37 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Filters\RequestOrderHandler;
-use App\Filters\Types\Search;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\TableReservationResource;
 use App\Http\Resources\Api\V1\TableResource;
-use App\Models\Table;
+use App\Repositories\TableRepository;
 use Illuminate\Http\Request;
 
 class TableController extends Controller
 {
+    private $repository;
+    
+    public function __construct(TableRepository $repository)
+    {
+        $this->repository = $repository;
+    }
     /**
-     * Display a listing of the resource.
-     *
+     * Display a listing of the tables.
      * @return \Illuminate\Http\Response
-     */
+    */
     public function index(Request $request)
     {
-        $items = Table::filters([
-            ...app(RequestOrderHandler::class)->sort($request),
-            new Search('capacity', $request->_q)
-        ])->paginate($request->per_page ?? config('app.pagination', 30));
-        return TableResource::collection($items);
-        
+        return TableResource::collection($this->repository->paginate($request));   
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Display the specified table.
      *
      * @param  \App\Models\Table  $table
      * @return \Illuminate\Http\Response
      */
-    public function show(Table $table)
+    public function show($table)
     {
-        return $table;
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Table  $table
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Table $table)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Table  $table
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Table $table)
-    {
-        //
+        return new TableReservationResource($this->repository->findOrFail($table));
     }
 }

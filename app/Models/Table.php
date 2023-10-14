@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Filters\Filters;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,7 +23,6 @@ class Table extends Model
 
     public function resolveRouteBinding($value, $field = null)
     {
-        $id = Str::after($value, "TB-");
-        return $this->where('id', $id)->firstOrFail();
+        return $this->where('id', $value)->firstOrFail();
     }
 }

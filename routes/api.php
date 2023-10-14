@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\TableController;
+use App\Http\Controllers\Api\V1\TableReservationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +16,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix'=> "v1.0"], function(){
-    Route::apiResource("tables", \App\Http\Controllers\Api\V1\TableController::class);
-    Route::apiResource("reservation", ReservationController::class);
-    Route::apiResource("meals", ReservationController::class);
-    Route::apiResource("orders", ReservationController::class);
+
+    Route::get("check/available", [TableReservationController::class, 'check_available']);
+    Route::apiResource("tables", TableController::class)->only(['index', 'show']);
+
+    // Route::apiResource("reservation", ReservationController::class);
+    // Route::apiResource("meals", ReservationController::class);
+    // Route::apiResource("orders", ReservationController::class);
 
     Route::group(['middleware'=> ['auth:api']], function(){
         Route::get('user', [UserController::class, 'index']);
