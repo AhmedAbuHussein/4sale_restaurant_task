@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix'=> "v1.0"], function(){
     Route::post('login', [LoginController::class, 'login'])->middleware('throttle:3,1');
 
-    Route::apiResource("reservations", ReservationController::class)->only(['store', 'show']);
+    Route::apiResource("reservations", ReservationController::class)->only(['store', "update", 'show']);
     Route::apiResource("availables", TableReservationController::class)->only(['index', 'show']);
     Route::apiResource("tables", TableController::class)->only(['index', 'show']);
     Route::apiResource("meals", MenuController::class)->only(['index', 'show']);
@@ -32,8 +32,7 @@ Route::group(['prefix'=> "v1.0"], function(){
         Route::apiResource("orders", OrderController::class)->only(['store', 'update', 'show']);
         Route::get("checkout", [PayController::class, 'checkout']);
         Route::post("pay", [PayController::class, 'pay']);
-        
-        
+                
         Route::get('auth/user', [LoginController::class, 'info']);
         Route::post('auth/logout', [LoginController::class, 'logout']);
     });

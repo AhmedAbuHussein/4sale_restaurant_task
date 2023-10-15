@@ -2,12 +2,11 @@
 
 namespace App\Exceptions;
 
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -50,7 +49,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        return parent::render($request, $exception);
+        //return parent::render($request, $exception);
         if ($request->wantsJson() || $request->expectsJson()) { 
             return $this->handleApiException($request, $exception);
         } else {
@@ -100,13 +99,14 @@ class Handler extends ExceptionHandler
         } elseif ($exception instanceof BadRequestHttpException) {
             $response['message'] =  $exception->getMessage();
             $statusCode =  400;
+        } elseif ($exception instanceof Exception) {
+            $response['message'] =  $exception->getMessage();
+            $statusCode =  $exception->getCode();
         }
         else{
             $response['message'] = "Oops, Something went wrong!!";
             $statusCode =  500;
         }
-
-        $response['status'] = $statusCode;
 
         return response()->json($response, $statusCode);
     }

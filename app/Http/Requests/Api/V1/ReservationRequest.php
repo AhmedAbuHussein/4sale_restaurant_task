@@ -24,12 +24,14 @@ class ReservationRequest extends FormRequest
     public function rules()
     {
         return [
-            "table_id"          => "required|numeric|exists:tables,id",
+            "table_id"          => "sometimes|numeric|exists:tables,id",
             "reservation_date"  => "required|date|date_format:Y-m-d",
             "from_time"         => "required|date_format:H:i:s",
             "to_time"           => "required|date_format:H:i:s",
             "name"              => "required|string|max:255",
             "phone"             => "required|string|max:255",
+            "persons"           => "sometimes|numeric",
+            "waiting"           => "sometimes|boolean",
         ];
     }
 }

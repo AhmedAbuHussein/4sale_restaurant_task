@@ -20,6 +20,7 @@ class ReservationResource extends JsonResource
             "start"=> $this->from_time,
             "end"=> $this->to_time,
             "persons"=> $this->persons,
+            "status"=> $this->status,
             "customer"=> [
                 "name"=> optional($this->customer)->name,
                 "phone"=> optional($this->customer)->phone,
