@@ -50,6 +50,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        return parent::render($request, $exception);
         if ($request->wantsJson() || $request->expectsJson()) { 
             return $this->handleApiException($request, $exception);
         } else {
@@ -79,11 +80,11 @@ class Handler extends ExceptionHandler
             $statusCode =  404;
         }
         elseif ($exception instanceof MethodNotAllowedHttpException) {
-            $response['message'] = 'Method Not Allowed';
+            $response['message'] = $exception->getMessage() ?? 'Method Not Allowed';
             $statusCode =  405;
         }
         elseif ($exception instanceof HttpException) {
-            $response['message'] = 'Http Exception Error';
+            $response['message'] = $exception->getMessage() ?? 'Http Exception Error';
             $statusCode =  405;
         }
         elseif ($exception instanceof QueryException) {

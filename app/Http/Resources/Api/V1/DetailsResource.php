@@ -14,10 +14,18 @@ class DetailsResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $data = [
             "id"        => $this->id,
             "meal_id"   => $this->meal_id,
             "amount"    => $this->amount_to_pay,
         ];
+        if($request->has('checkout')){
+            $this->load("meal");
+            $price = round(((1- $this->meal->discount/100) * $this->meal->price)  , 2);
+            $data['price'] = $this->meal->price;
+            $data['discount'] = $this->meal->discount ."%";
+            $data['total'] = round($price * $this->amount_to_pay, 2);
+        }
+        return $data;
     }
 }

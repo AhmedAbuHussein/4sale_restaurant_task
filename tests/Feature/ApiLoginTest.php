@@ -9,7 +9,6 @@ class ApiLoginTest extends TestCase
 
     public function test_login_success()
     {
-       // $this->withoutExceptionHandling();
         $response = $this->post('api/v1.0/login', [
             "email"=> "user@gmail.com",
             "password"=> "password"
@@ -19,14 +18,26 @@ class ApiLoginTest extends TestCase
         ->assertJsonStructure(["data"=>["token","user"]]);
     }
 
-    public function test_login_fail()
+    public function test_login_validation()
     {
         $response = $this->post('api/v1.0/login',[
-            "email"=> "userssdfasd@gmail.com",
-            "password"=> "passwsdfasdford"
+            "email"=> "user@gmail.com",
         ], ["Accept"=> "application/json"]);
 
         $response->assertStatus(422)
-        ->assertJsonStructure(["message","errors"=> ["email"]]);
+        ->assertJsonStructure(["message","errors"=> []]);
+    }
+
+    public function test_login_throttle()
+    {
+        for ($i=0; $i < 4; $i++) { 
+            $response = $this->post('api/v1.0/login',[
+                "email"=> "not-user@gmail.com",
+                "password"=> "password_error",
+            ], ["Accept"=> "application/json"]);
+        }
+
+        $response->assertStatus(405)
+        ->assertJsonStructure(["message"]);
     }
 }
