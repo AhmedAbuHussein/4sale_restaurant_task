@@ -1,0 +1,694 @@
+{
+	"info": {
+		"_postman_id": "9121b716-421b-4b69-8831-fc70f1874fa3",
+		"name": "4sale",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4118313",
+		"_collection_link": "https://restless-robot-576622.postman.co/workspace/My-Workspace~5268a49a-e007-4b50-860e-64dd5538219a/collection/4118313-9121b716-421b-4b69-8831-fc70f1874fa3?action=share&source=collection_link&creator=4118313"
+	},
+	"item": [
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "checkout",
+					"item": [
+						{
+							"name": "Order checkout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "1|TElSAF2HO4sfW9cu8pntuHWxhbwVazmtW6nySYg3",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/checkout?reservation_id=1&checkout=service_tax&service=18&tax=2.5",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"checkout"
+									],
+									"query": [
+										{
+											"key": "reservation_id",
+											"value": "1"
+										},
+										{
+											"key": "checkout",
+											"value": "service_tax",
+											"description": "service_only, service_tax"
+										},
+										{
+											"key": "service",
+											"value": "18",
+											"description": "sometimes can be nullable or remove it"
+										},
+										{
+											"key": "tax",
+											"value": "2.5",
+											"description": "sometime can be nullable or remove it"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order Pay",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "1|TElSAF2HO4sfW9cu8pntuHWxhbwVazmtW6nySYg3",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reservation_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "checkout",
+											"value": "service_tax",
+											"description": "service_only, service_tax",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/pay",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Order create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|TElSAF2HO4sfW9cu8pntuHWxhbwVazmtW6nySYg3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reservation_id\": 1,\r\n    \"type\": \"sync\",\r\n    \"meals\": [\r\n        {\r\n            \"id\": 1,\r\n            \"amount\": 5\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"amount\": 5\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/orders",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|TElSAF2HO4sfW9cu8pntuHWxhbwVazmtW6nySYg3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"sync\",\r\n    \"meals\": [\r\n        {\r\n            \"id\": 1,\r\n            \"amount\": 2\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"amount\": 5\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/orders/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Show",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|TElSAF2HO4sfW9cu8pntuHWxhbwVazmtW6nySYg3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/orders/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Menu",
+			"item": [
+				{
+					"name": "meals",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/meals?price=asc",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"meals"
+							],
+							"query": [
+								{
+									"key": "price",
+									"value": "asc",
+									"description": "id, price, discount, available_quantity"
+								},
+								{
+									"key": "_q",
+									"value": "consequatur",
+									"description": "search",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "meals singel",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/meals/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"meals",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "tables",
+			"item": [
+				{
+					"name": "available check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/availables/1?reservation_date=2023-10-14&from_time=15:00:00&to_time=17:00:00",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"availables",
+								"1"
+							],
+							"query": [
+								{
+									"key": "reservation_date",
+									"value": "2023-10-14"
+								},
+								{
+									"key": "from_time",
+									"value": "15:00:00"
+								},
+								{
+									"key": "to_time",
+									"value": "17:00:00"
+								},
+								{
+									"key": "persons",
+									"value": "5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "available tables",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/availables?reservation_date=2023-10-14&from_time=15:01:00&to_time=17:00:00&per_page=20",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"availables"
+							],
+							"query": [
+								{
+									"key": "reservation_date",
+									"value": "2023-10-14"
+								},
+								{
+									"key": "from_time",
+									"value": "15:01:00"
+								},
+								{
+									"key": "to_time",
+									"value": "17:00:00"
+								},
+								{
+									"key": "persons",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tables",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tables?per_page=5&capacity=asc&_q=",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tables"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "5",
+									"description": "per page"
+								},
+								{
+									"key": "capacity",
+									"value": "asc",
+									"description": "asc or desc"
+								},
+								{
+									"key": "_q",
+									"value": "",
+									"description": "search key"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "single table",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/tables/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tables",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservation",
+			"item": [
+				{
+					"name": "reservation show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/reservations/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reservations",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reservation create",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_id\": 1,\r\n    \"waiting\": false,\r\n    \"name\": \"Ahmed Shaker\",\r\n    \"phone\": \"+201203569068\",\r\n    \"reservation_date\": \"2023-10-14\",\r\n    \"from_time\": \"15:01:00\",\r\n    \"to_time\": \"17:00:00\",\r\n    \"persons\": 3\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/reservations",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reservation update",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_id\": 1,\r\n    \"status\": \"confirmed\",\r\n     \"reservation_date\": \"2023-10-14\"\r\n   \r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/reservations/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reservations",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"user@gmail.com\",\r\n    \"password\": \"password\"\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://127.0.0.1:8000/api/v1.0",
+			"type": "string"
+		}
+	]
+}
