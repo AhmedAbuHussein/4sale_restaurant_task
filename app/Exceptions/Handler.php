@@ -10,6 +10,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -61,60 +62,52 @@ class Handler extends ExceptionHandler
     {
         $exception = $this->prepareException($exception);
 
-        if ($exception instanceof HttpResponseException) {
-            $exception = $exception->getResponse();
-        }
-
-        if ($exception instanceof AuthenticationException) {
-            $exception = $this->unauthenticated($request, $exception);
-        }
-
         if ($exception instanceof ValidationException) {
-            $exception = $this->convertValidationExceptionToResponse($exception, $request);
+            return $this->convertValidationExceptionToResponse($exception, $request);
         }
-
-        return $this->customApiResponse($exception);
-    }
-
-
-    private function customApiResponse($exception)
-    {
-        $response = [];
-        $statusCode = 500;
-        if (method_exists($exception, 'getCode') || method_exists($exception, 'getStatusCode')) {
-            $statusCode =  ($exception->getCode() > 0 && $exception->getCode() < 500) ? $exception->getCode() :  $exception->getStatusCode();
-        }
-
-        if ($exception instanceof ModelNotFoundException) {
+        else if ($exception instanceof ModelNotFoundException) {
             $modelName = " " . strtolower(class_basename($exception->getModel())) . " ";
             $response['message'] = "Does not exist Any ". $modelName . " with this Identifier ";
+            $statusCode =  404;
         }
         elseif ($exception instanceof AuthorizationException) {
-            $response['message'] = $exception->getMessage();
+            $response['message'] = "Unauthorized";
+            $statusCode =  401;
         }
         elseif ($exception instanceof NotFoundHttpException) {
             $response['message'] = 'Model Not Found Http Excption';
+            $statusCode =  404;
         }
         elseif ($exception instanceof MethodNotAllowedHttpException) {
             $response['message'] = 'Method Not Allowed';
+            $statusCode =  405;
         }
         elseif ($exception instanceof HttpException) {
             $response['message'] = 'Http Exception Error';
+            $statusCode =  405;
         }
         elseif ($exception instanceof QueryException) {
             $response['message'] = $exception->getMessage();
         }
         elseif ($exception instanceof TokenMismatchException) {
            $response['message'] =  'Csrf token mis match';
+           $statusCode =  401;
         }
         elseif ($exception instanceof UnprocessableEntityHttpException) {
+            $response['message'] =  "Unprocessable Entity";
+            $statusCode =  422;
+        } elseif ($exception instanceof BadRequestHttpException) {
             $response['message'] =  $exception->getMessage();
-        }else{
-            $response['message'] = $exception->getMessage();
+            $statusCode =  400;
+        }
+        else{
+            $response['message'] = "Oops, Something went wrong!!";
+            $statusCode =  500;
         }
 
         $response['status'] = $statusCode;
 
         return response()->json($response, $statusCode);
     }
+
 }

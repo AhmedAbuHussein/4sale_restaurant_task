@@ -15,8 +15,8 @@ class TableReservationResource extends JsonResource
     public function toArray($request)
     {
         $this->load(['reservations'=> function($query){
-            $query->with(['customer'])->where('reservation_date', ">=", now())
-            ->where('to_time', ">=", now());
+            $query->with(['customer'])->where('reservation_date', ">=", now()->format('Y-m-d'))
+            ->where('to_time', ">=", now()->format('H:i:s'));
         }]);
         return [
             "table"=> $this->id,

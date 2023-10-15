@@ -24,7 +24,8 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            "reservation_id"    => "required|numeric|exists:reservations,id",
+            "reservation_id"    => [request()->ismethod("POST") ? "required": "sometimes", "numeric", "exists:reservations,id"],
+            "type"              => "required|string|in:sync,increment",
             "meals"             => "required|array",
             "meals.*.id"        => "required|numeric|exists:meals,id",
             "meals.*.amount"    => "required|numeric|min:1",

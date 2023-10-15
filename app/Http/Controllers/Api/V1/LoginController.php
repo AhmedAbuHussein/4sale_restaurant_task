@@ -10,6 +10,7 @@ use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Resources\Api\V1\UserResource;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class LoginController extends Controller
 {
@@ -26,7 +27,7 @@ class LoginController extends Controller
                 ],
             ]);
         }
-        throw new Exception("Invalid User Credentials", 400);
+       // throw new Exception("Invalida User Credintials", 400);
     }
 
 

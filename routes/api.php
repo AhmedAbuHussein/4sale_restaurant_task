@@ -28,10 +28,9 @@ Route::group(['prefix'=> "v1.0"], function(){
     Route::apiResource("meals", MenuController::class)->only(['index', 'show']);
     
     Route::group(['middleware'=> ['auth:sanctum']], function(){
-        Route::apiResource("orders", OrderController::class)->only(['index', 'show']);
+        Route::apiResource("orders", OrderController::class)->only(['store', 'update', 'show']);
         
         Route::get('auth/user', [LoginController::class, 'info']);
         Route::post('auth/logout', [LoginController::class, 'logout']);
-
     });
 });

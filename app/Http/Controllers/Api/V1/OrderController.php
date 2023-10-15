@@ -37,4 +37,17 @@ class OrderController extends Controller
     {
         return $this->repository->store($request);
     }
+
+
+    /**
+     * update resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(OrderRequest $request, $id)
+    {
+        return $this->repository->update($request, $id);
+    }
+
 }
