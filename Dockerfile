@@ -5,12 +5,19 @@ WORKDIR /var/www
 
 # Install dependencies
 RUN apt-get update
-RUN apt-get install -y zip unzip git
+RUN apt-get install -y zip unzip git curl libpng-dev libonig-dev libxml2-dev 
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql sockets
+RUN docker-php-ext-configure opcache --enable-opcache
+RUN docker-php-ext-install pdo pdo_mysql gd
 
-COPY composer.json .
+
+# Copy application files
+COPY . .
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -18,15 +25,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy application files
-COPY . .
-
-# Install application dependencies
-RUN composer install
-
-RUN chmod 777 -R storage
-
 # Set file permissions
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# RUN chown -R www-data:www-data .
+RUN chmod 777 -R /var/www/storage
 
-RUN chmod 644 ./vendor/autoload.php
+CMD [ "composer", "install"]
