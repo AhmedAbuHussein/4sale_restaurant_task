@@ -2,13 +2,19 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ApiLoginTest extends TestCase
 {
+    use RefreshDatabase;
+    protected $seed = true;
+    
+        
 
     public function test_login_success()
     {
+        $this->refreshDatabase();
         $response = $this->post('api/v1.0/login', [
             "email"=> "user@gmail.com",
             "password"=> "password"
