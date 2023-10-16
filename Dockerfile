@@ -27,12 +27,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . /var/www/
 RUN chown -R www-data:www-data /var/
 
-RUN composer install --prefer-dist --no-interaction
-
 # server host config
 COPY cli/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY .env.example /var/www/.env
 
+RUN composer install --prefer-dist --no-interaction
 
 # Set file permissions
 RUN chmod 777 -R /var/www/storage
