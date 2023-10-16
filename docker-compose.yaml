@@ -1,28 +1,23 @@
-version: '3.3'
+version: '3'
 services: 
     main:
         container_name: main
         build: 
-            context: .
+            context: ./
             dockerfile: Dockerfile
         volumes:
             - .:/var/www
+            - .env.example:/var/www/.env
+
         ports:
-            - 8000:8000
+            - 8000:80
         environment:
-            - APP_NAME=Task
             - APP_ENV=local
-            - APP_KEY=base64:7fMa/R7tC8SD+IvEo+BtwZ6m9efKC708t6ac8Q5RUJk=
-            - APP_URL=http://localhost:8000
-            - DB_CONNECTION=mysql
-            - DB_HOST=db
-            - DB_PORT=3306
-            - DB_DATABASE=task
-            - DB_USERNAME=root
-            - DB_PASSWORD=root
+            - APP_DEBUG=true
+        networks:
+            - application
         depends_on:
             - db
-        command: sh -c "php artisan test && php artisan serv --host=0.0.0.0 --port=8000"
     db:
         container_name: db
         image: mariadb
@@ -34,6 +29,13 @@ services:
             - MARIADB_DATABASE=task
             - MARIADB_PASSWORD=root
             - MARIADB_ROOT_PASSWORD=root
+            - MARIADB_ALLOW_EMPTY_PASSWORD=true
         restart: always
+        networks:
+            - application
+networks:
+    application:
+        driver: bridge
 volumes:
-  db_data:
+    db_data:
+        driver: local
