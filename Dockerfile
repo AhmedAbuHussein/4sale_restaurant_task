@@ -18,12 +18,14 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy application files
-COPY . /var/www/
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
      --install-dir=/usr/local/bin --filename=composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY . /var/www/
+RUN chown -R www-data:www-data /var/
 
 RUN composer install --prefer-dist --no-interaction
 
@@ -33,7 +35,6 @@ COPY .env.example /var/www/.env
 
 
 # Set file permissions
-RUN chown -R www-data:www-data /var/www/
 RUN chmod 777 -R /var/www/storage
 
 RUN a2enmod rewrite
